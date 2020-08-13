@@ -1,7 +1,7 @@
 ---
 title: "Tidyverse와 pivoting"
 author: "Hwiwon Lee"
-date: "`r format(Sys.Date())`"
+date: "2020-08-13"
 slug: tidyverse와-pivoting
 categories:
   - tidyverse
@@ -60,27 +60,17 @@ pre {
 </style>
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.height = 8, fig.align = "center", cache=T, dpi = 300, dev = "png",
-                        collapse = TRUE, comment = "#>")
 
-# https://tibble.tidyverse.org/reference/formatting.html
-options(tibble.print_max = 10)
-options(tibble.max_extra_cols = 10)
-options(max.print = 300)
-
-library(knitr) # for include_graphics()
-library(tidyverse) # as you known, core package
-```
 # **Pivoting?**
 사전에서 **pivot**을 찾으면 (축을 중심으로) 회전하다; 회전시키다의 정의를 찾을 수 있듯이, 데이터 핸들링에서의 **pivoting**은 데이터셋을 **어떠한 기준**에 따라 넓게 펴보거나 길게 좁혀보는 방법을 뜻합니다. pivoting의 아주 좋은 예시를 `tidyr`의 로고에서 찾을 수 있습니다. 
 
 > 1.1.1의 tidyr에서 로고가 바뀌었습니다. 아래의 로고는 1.1이하의 로고입니다.
 
 
-```{r, echo=FALSE, out.height="30%", out.width="30%" , fig.cap="tidyr의 로고. 행과 열의 기준에 따라 데이터셋의 형태를 바꾸는 pivoting을 보여주고 있다"}
-knitr::include_graphics("https://ih1.redbubble.net/image.543365563.2254/flat,750x1000,075,f.u2.jpg", dpi = 300)
-```
+<div class="figure" style="text-align: center">
+<img src="https://ih1.redbubble.net/image.543365563.2254/flat,750x1000,075,f.u2.jpg" alt="tidyr의 로고. 행과 열의 기준에 따라 데이터셋의 형태를 바꾸는 pivoting을 보여주고 있다" width="30%" height="30%" />
+<p class="caption">Figure 1: tidyr의 로고. 행과 열의 기준에 따라 데이터셋의 형태를 바꾸는 pivoting을 보여주고 있다</p>
+</div>
 
 [tidyr의 메인 페이지에서 볼 수 있는 것](https://tidyr.tidyverse.org/index.html)과 같이 pivoting은 tidyr의 다섯 가지 핵심 기능 중 하나입니다. 다섯 가지를 간단히 나열해보면 아래와 같습니다.    
 
@@ -103,24 +93,63 @@ pivoting은 `pivot_longer()`, `pivot_wider()`이 아닌 `gather()`과 `spread()`
 
 천 명의 신용평가자료인 `GermanCredit` 데이터셋을 이용해서 설명해보겠습니다. 
 
-```{r}
+
+```r
 library(caret)
 data(GermanCredit)
 tibble(GermanCredit) # 1000 x 62
+#> # A tibble: 1,000 x 62
+#>    Duration Amount InstallmentRate~ ResidenceDurati~   Age NumberExistingC~
+#>       <int>  <int>            <int>            <int> <int>            <int>
+#>  1        6   1169                4                4    67                2
+#>  2       48   5951                2                2    22                1
+#>  3       12   2096                2                3    49                1
+#>  4       42   7882                2                4    45                1
+#>  5       24   4870                3                4    53                2
+#>  6       36   9055                2                4    35                1
+#>  7       24   2835                3                4    53                1
+#>  8       36   6948                2                2    35                1
+#>  9       12   3059                2                4    61                1
+#> 10       30   5234                4                2    28                2
+#> # ... with 990 more rows, and 56 more variables: NumberPeopleMaintenance <int>,
+#> #   Telephone <dbl>, ForeignWorker <dbl>, Class <fct>,
+#> #   CheckingAccountStatus.lt.0 <dbl>, CheckingAccountStatus.0.to.200 <dbl>,
+#> #   CheckingAccountStatus.gt.200 <dbl>, CheckingAccountStatus.none <dbl>,
+#> #   CreditHistory.NoCredit.AllPaid <dbl>, CreditHistory.ThisBank.AllPaid <dbl>,
+#> #   ...
 ```
 
-```{r}
+
+```r
 names(GermanCredit)[1:20]
+#>  [1] "Duration"                       "Amount"                        
+#>  [3] "InstallmentRatePercentage"      "ResidenceDuration"             
+#>  [5] "Age"                            "NumberExistingCredits"         
+#>  [7] "NumberPeopleMaintenance"        "Telephone"                     
+#>  [9] "ForeignWorker"                  "Class"                         
+#> [11] "CheckingAccountStatus.lt.0"     "CheckingAccountStatus.0.to.200"
+#> [13] "CheckingAccountStatus.gt.200"   "CheckingAccountStatus.none"    
+#> [15] "CreditHistory.NoCredit.AllPaid" "CreditHistory.ThisBank.AllPaid"
+#> [17] "CreditHistory.PaidDuly"         "CreditHistory.Delay"           
+#> [19] "CreditHistory.Critical"         "Purpose.NewCar"
 ```
-```{r}
+
+```r
 names(GermanCredit)[grepl("Purpose.", names(GermanCredit))]
+#>  [1] "Purpose.NewCar"              "Purpose.UsedCar"            
+#>  [3] "Purpose.Furniture.Equipment" "Purpose.Radio.Television"   
+#>  [5] "Purpose.DomesticAppliance"   "Purpose.Repairs"            
+#>  [7] "Purpose.Education"           "Purpose.Vacation"           
+#>  [9] "Purpose.Retraining"          "Purpose.Business"           
+#> [11] "Purpose.Other"
 ```
 
 
 62개의 열을 갖고 있는 `GermanCredit`의 열 이름에 일정한 규칙이 있음을 찾으셨나요? 여러 번 데이터셋을 분석해보신 분이라면 `변수의 이름.변수의 수준`으로 구성되어 있음을 쉽게 보실 수 있으실 겁니다. 예를 들어 대출 목적을 의미하는 `Purpose`의 경우, `Newcar`, `UsedCar`, `Furniture.Equipment`, `Radio.Television`, ... 등으로 합칠 수 있겠습니다. 한번 볼까요? 
 
 
-```{r}
+
+```r
 GermanCredit %>% 
   mutate(index = seq(1, 1000, 1)) %>%  
   pivot_longer(cols = matches("Purpose"), # 하나의 열로 길게 합칠 열들을 선택하고
@@ -128,6 +157,24 @@ GermanCredit %>%
                names_prefix = "Purpose.", # `하나의 열`에 들어갈 합쳐질 열의 이름들에서 빼고 싶은 부분을 정해주고
                values_to = "Purpose value") %>% # 길게 합쳐질 열들이 갖고 있던 값이 저장될 열의 이름까지 설정해주면 끝.
   select(index, Purpose, `Purpose value` , everything())
+#> # A tibble: 11,000 x 54
+#>    index Purpose `Purpose value` Duration Amount InstallmentRate~
+#>    <dbl> <chr>             <dbl>    <int>  <int>            <int>
+#>  1     1 NewCar                0        6   1169                4
+#>  2     1 UsedCar               0        6   1169                4
+#>  3     1 Furnit~               0        6   1169                4
+#>  4     1 Radio.~               1        6   1169                4
+#>  5     1 Domest~               0        6   1169                4
+#>  6     1 Repairs               0        6   1169                4
+#>  7     1 Educat~               0        6   1169                4
+#>  8     1 Vacati~               0        6   1169                4
+#>  9     1 Retrai~               0        6   1169                4
+#> 10     1 Busine~               0        6   1169                4
+#> # ... with 10,990 more rows, and 48 more variables: ResidenceDuration <int>,
+#> #   Age <int>, NumberExistingCredits <int>, NumberPeopleMaintenance <int>,
+#> #   Telephone <dbl>, ForeignWorker <dbl>, Class <fct>,
+#> #   CheckingAccountStatus.lt.0 <dbl>, CheckingAccountStatus.0.to.200 <dbl>,
+#> #   CheckingAccountStatus.gt.200 <dbl>, ...
 ```
 
 
@@ -143,21 +190,28 @@ GermanCredit %>%
 하나 하나씩 살펴보겠습니다. 먼저 `Purpose`에 정말 `Purpose.`가 붙어있던 항목들이 저장되어 있는지 확인해보겠습니다. 위의 코드에 `count()`만 더해주면 간단하게 확인 가능하겠죠? 
 
 
-```{r, echo=FALSE}
-options(tibble.print_max = 11)
-GermanCredit %>% 
-  mutate(index = seq(1, 1000, 1)) %>%  
-  pivot_longer(cols = matches("Purpose"), 
-               names_to = "Purpose", 
-               names_prefix = "Purpose.", 
-               values_to = "Purpose value") %>% 
-  select(index, Purpose, `Purpose value` , everything()) %>% 
-  count(Purpose)
+
+```
+#> # A tibble: 11 x 2
+#>    Purpose                 n
+#>    <chr>               <int>
+#>  1 Business             1000
+#>  2 DomesticAppliance    1000
+#>  3 Education            1000
+#>  4 Furniture.Equipment  1000
+#>  5 NewCar               1000
+#>  6 Other                1000
+#>  7 Radio.Television     1000
+#>  8 Repairs              1000
+#>  9 Retraining           1000
+#> 10 UsedCar              1000
+#> 11 Vacation             1000
 ```
 `Purpose`에 `Business`부터 `Vacation`까지 처음 데이터셋의 row 개수와 같은 1000개씩 저장되어 있는 것을 확인할 수 있습니다. 
 
 
-```{r}
+
+```r
 GermanCredit %>% 
   mutate(index = seq(1, 1000, 1)) %>%  
   pivot_longer(cols = matches("Purpose"), 
@@ -173,6 +227,50 @@ GermanCredit %>%
   select(index, matches("purpose")) %>% 
   inner_join(check, ., by = "index") %>%  # inner_join을 통해 check와 pivot_longer이전의 데이터 결합
   as.data.frame()
+#>    index             Purpose Purpose value Purpose.NewCar Purpose.UsedCar
+#> 1      1    Radio.Television             1              0               0
+#> 2      2    Radio.Television             1              0               0
+#> 3      3           Education             1              0               0
+#> 4      4 Furniture.Equipment             1              0               0
+#> 5      5              NewCar             1              1               0
+#> 6      6           Education             1              0               0
+#> 7      7 Furniture.Equipment             1              0               0
+#> 8      8             UsedCar             1              0               1
+#> 9      9    Radio.Television             1              0               0
+#> 10    10              NewCar             1              1               0
+#>    Purpose.Furniture.Equipment Purpose.Radio.Television
+#> 1                            0                        1
+#> 2                            0                        1
+#> 3                            0                        0
+#> 4                            1                        0
+#> 5                            0                        0
+#> 6                            0                        0
+#> 7                            1                        0
+#> 8                            0                        0
+#> 9                            0                        1
+#> 10                           0                        0
+#>    Purpose.DomesticAppliance Purpose.Repairs Purpose.Education Purpose.Vacation
+#> 1                          0               0                 0                0
+#> 2                          0               0                 0                0
+#> 3                          0               0                 1                0
+#> 4                          0               0                 0                0
+#> 5                          0               0                 0                0
+#> 6                          0               0                 1                0
+#> 7                          0               0                 0                0
+#> 8                          0               0                 0                0
+#> 9                          0               0                 0                0
+#> 10                         0               0                 0                0
+#>    Purpose.Retraining Purpose.Business Purpose.Other
+#> 1                   0                0             0
+#> 2                   0                0             0
+#> 3                   0                0             0
+#> 4                   0                0             0
+#> 5                   0                0             0
+#> 6                   0                0             0
+#> 7                   0                0             0
+#> 8                   0                0             0
+#> 9                   0                0             0
+#> 10                  0                0             0
 ```
 
 
@@ -182,7 +280,8 @@ GermanCredit %>%
 `pivot_longer()`의 효과를 설명했으니 두 번째와 세 번째는 더욱 쉽게 확인해볼 수 있습니다. `pivot_longer()`를 사용해 열들을 세로로 길게 쌓게 되면 대상이 된 열만큼 나머지 열들의 값이 행에 복사됩니다. 경우의 수를 생각해보면 이해가 쉽습니다. 하나의 obs이 하나의 행을 가진 상태에서 `pivot_longer()`로 생긴 열의 경우의 수 만큼, 하나의 obs가 갖는 행이 늘어나게 되는 것이죠. 
 
 
-```{r}
+
+```r
 options(tibble.print_max = 11)
 GermanCredit %>% 
   mutate(index = seq(1, 1000, 1)) %>%  
@@ -192,6 +291,25 @@ GermanCredit %>%
                values_to = "Purpose value") %>% 
   select(index, Purpose, `Purpose value` , everything()) %>% 
   filter(index == 1)
+#> # A tibble: 11 x 54
+#>    index Purpose `Purpose value` Duration Amount InstallmentRate~
+#>    <dbl> <chr>             <dbl>    <int>  <int>            <int>
+#>  1     1 NewCar                0        6   1169                4
+#>  2     1 UsedCar               0        6   1169                4
+#>  3     1 Furnit~               0        6   1169                4
+#>  4     1 Radio.~               1        6   1169                4
+#>  5     1 Domest~               0        6   1169                4
+#>  6     1 Repairs               0        6   1169                4
+#>  7     1 Educat~               0        6   1169                4
+#>  8     1 Vacati~               0        6   1169                4
+#>  9     1 Retrai~               0        6   1169                4
+#> 10     1 Busine~               0        6   1169                4
+#> 11     1 Other                 0        6   1169                4
+#> # ... with 48 more variables: ResidenceDuration <int>, Age <int>,
+#> #   NumberExistingCredits <int>, NumberPeopleMaintenance <int>,
+#> #   Telephone <dbl>, ForeignWorker <dbl>, Class <fct>,
+#> #   CheckingAccountStatus.lt.0 <dbl>, CheckingAccountStatus.0.to.200 <dbl>,
+#> #   CheckingAccountStatus.gt.200 <dbl>, ...
 ```
 
 
@@ -206,7 +324,8 @@ GermanCredit %>%
 ## `pivot_longer()`의 parameter
 
 
-```{r}
+
+```r
 # pivot_longer( 
 #   data, # dataset  
 #   cols, # 필수, pivot_longer()의 타겟이 되는 열을 지정합니다.   
@@ -239,56 +358,103 @@ GermanCredit %>%
 5. **names_sep** : 문자열(character),`names_to`에 여러 값을 넣었을 때, 값의 분기점이 되는 문자열을 넣어주면 넣어준 값을 기준으로 생성되는 열의 이름이 나뉩니다. 
 6. **names_pattern** : 문자열(character), **대상이 되는 열들이 여러 의미를 가진 경우**, 이름들의 패턴을 넣어 `name_to`에서 설정한 열의 이름들에  정의된 열 이름들이 **쪼개어 저장**되도록 합니다. 
     - **names_sep**과 **names_pattern** : 말로는 설명이 참 어렵습니다. [pivot](https://tidyr.tidyverse.org/articles/pivot.html) 페이지의 예제 데이터를 통해 알아보도록 하겠습니다.
-    ```{r}
-# a. names_sep의 활용 
-# (a) 일반적인 names_sep을 이용한 열 이름 분할
-data <- tribble(
-  ~index,  ~birth_2000,  ~name_2000, ~birth_2010,  ~name_2010,
+    
+    ```r
+    # a. names_sep의 활용 
+    # (a) 일반적인 names_sep을 이용한 열 이름 분할
+    data <- tribble(
+      ~index,  ~birth_2000,  ~name_2000, ~birth_2010,  ~name_2010,
        1L, "01-15", "A",  "02-09", "F",
        2L, "04-22", "B",  "03-01", "G",
        3L, "08-11", "C",  "04-15", "H",
        4L, "11-09", "D",  "06-21", "I",
        5L, "12-07", "E",  "10-22", "J",
-)
-
-data %>%
-  pivot_longer(-index,
+    )
+    
+    data %>%
+      pivot_longer(-index,
                names_to = c("variable", "year"),
                names_sep = "_",
                values_drop_na = TRUE)
+    #> # A tibble: 20 x 4
+    #>    index variable year  value
+    #>    <int> <chr>    <chr> <chr>
+    #>  1     1 birth    2000  01-15
+    #>  2     1 name     2000  A    
+    #>  3     1 birth    2010  02-09
+    #>  4     1 name     2010  F    
+    #>  5     2 birth    2000  04-22
+    #>  6     2 name     2000  B    
+    #>  7     2 birth    2010  03-01
+    #>  8     2 name     2010  G    
+    #>  9     3 birth    2000  08-11
+    #> 10     3 name     2000  C    
+    #> # ... with 10 more rows
     ```
 
-    ```{r}
-# (b) Special name, ".value"를 이용한 분할
-family <- tribble(
-  ~family,  ~dob_USA,  ~dob_Eurupe, ~gender_USA, ~gender_Eurupe,
+    
+    ```r
+    # (b) Special name, ".value"를 이용한 분할
+    family <- tribble(
+      ~family,  ~dob_USA,  ~dob_Eurupe, ~gender_USA, ~gender_Eurupe,
        1L, "1998-11-26", "2000-01-29",             1L,             2L,
        2L, "1996-06-22",           NA,             2L,             NA,
        3L, "2002-07-11", "2004-04-05",             2L,             2L,
        4L, "2004-10-10", "2009-08-27",             1L,             1L,
        5L, "2000-12-05", "2005-02-28",             2L,             1L,
-)
-
-family %>%
-  pivot_longer(-family,
+    )
+    
+    family %>%
+      pivot_longer(-family,
                names_to = c(".value", "Country"), # special name, ".value"
                names_sep = "_",
                values_drop_na = TRUE)
+    #> # A tibble: 9 x 4
+    #>   family Country dob        gender
+    #>    <int> <chr>   <chr>       <int>
+    #> 1      1 USA     1998-11-26      1
+    #> 2      1 Eurupe  2000-01-29      2
+    #> 3      2 USA     1996-06-22      2
+    #> 4      3 USA     2002-07-11      2
+    #> 5      3 Eurupe  2004-04-05      2
+    #> 6      4 USA     2004-10-10      1
+    #> 7      4 Eurupe  2009-08-27      1
+    #> 8      5 USA     2000-12-05      2
+    #> 9      5 Eurupe  2005-02-28      1
     ```
 
-    ```{r}
-# b. names_pattern의 활용 
-names(who)[1:15]
+    
+    ```r
+    # b. names_pattern의 활용 
+    names(who)[1:15]
+    #>  [1] "country"      "iso2"         "iso3"         "year"         "new_sp_m014" 
+    #>  [6] "new_sp_m1524" "new_sp_m2534" "new_sp_m3544" "new_sp_m4554" "new_sp_m5564"
+    #> [11] "new_sp_m65"   "new_sp_f014"  "new_sp_f1524" "new_sp_f2534" "new_sp_f3544"
     ```
 
-    ```{r}
-who %>% pivot_longer(cols = new_sp_m014 : newrel_f65,
+    
+    ```r
+    who %>% pivot_longer(cols = new_sp_m014 : newrel_f65,
                      names_to = c("diagnosis", "gender", "age"),
                      names_pattern = "new_?(.*)_(.)(.*)",
                      # _?(.*)_ : _가 있거나 없고 뒤에 _가 붙기 까지의 모든 문자열을 diagnosis로 정의
                      # _(.) : _이후 단 한 글자를 gender로 정의
                      # (.)(.*) : (.) 이후 열 이름의 끝까지를 age로 정의
                      values_to = "count")
+    #> # A tibble: 405,440 x 8
+    #>    country     iso2  iso3   year diagnosis gender age   count
+    #>    <chr>       <chr> <chr> <int> <chr>     <chr>  <chr> <int>
+    #>  1 Afghanistan AF    AFG    1980 sp        m      014      NA
+    #>  2 Afghanistan AF    AFG    1980 sp        m      1524     NA
+    #>  3 Afghanistan AF    AFG    1980 sp        m      2534     NA
+    #>  4 Afghanistan AF    AFG    1980 sp        m      3544     NA
+    #>  5 Afghanistan AF    AFG    1980 sp        m      4554     NA
+    #>  6 Afghanistan AF    AFG    1980 sp        m      5564     NA
+    #>  7 Afghanistan AF    AFG    1980 sp        m      65       NA
+    #>  8 Afghanistan AF    AFG    1980 sp        f      014      NA
+    #>  9 Afghanistan AF    AFG    1980 sp        f      1524     NA
+    #> 10 Afghanistan AF    AFG    1980 sp        f      2534     NA
+    #> # ... with 405,430 more rows
     ```
     - **a.(a)** 에서는 구분자 _를 이용한 `names_sep`의 기본적인 사용 방법을 볼 수 있습니다. 
 
@@ -321,38 +487,57 @@ who %>% pivot_longer(cols = new_sp_m014 : newrel_f65,
 
 `pivot_wider()`는 하나의 열에 속한 여러 value를 각각의 열로 펼쳐 넓은 형태의 데이터셋을 만들기 위해 사용합니다. 말은 길지만 앞서 본 **`pivot_longer()`의 역(inverse)**입니다. `pivot_longer()`의 결과로 열의 개수가 줄고 행의 개수가 늘었던 것과 반대로 `pivot_wider()`의 결과로 열의 개수가 늘고 행의 개수가 줄어듭니다. 
 
-```{r, eval=FALSE, echo=FALSE}
-# 데이터셋 찾아보기 
-# https://stackoverflow.com/questions/27709936/get-a-list-of-the-data-sets-in-a-particular-package
-library(vcdExtra)
-vcdExtra::datasets(c("plyr", "dplyr", "vcdExtra"))
 
-AirCrash %>% 
-  count(Cause)
-
-?AirCrash # Data on all fatal commercial airplane crashes from 1993–2015. Excludes small planes (less than 6 passengers) and non-commercial (cargo, military, private) aircraft.
-# AirCrash로 결정
-```
 
 ## 예제를 통해 알아보는 `pivot_wider()`의 효과
 
 이번에 사용할 데이터셋은 1993년부터 2015년까지의 항공기 사고를 다룬 `AirCrach`입니다. 
 
 
-```{r}
+
+```r
 library(vcdExtra)
 tibble(AirCrash) # 439 x 5 
+#> # A tibble: 439 x 5
+#>    Phase   Cause    date       Fatalities  Year
+#>    <fct>   <fct>    <date>          <int> <int>
+#>  1 landing criminal 1993-09-21         27  1993
+#>  2 landing criminal 1993-09-22        108  1993
+#>  3 landing criminal 1996-11-23        125  1996
+#>  4 landing criminal 2002-05-07        112  2002
+#>  5 landing unknown  1993-07-01         41  1993
+#>  6 landing unknown  1993-07-31         19  1993
+#>  7 landing unknown  1994-05-07          8  1994
+#>  8 landing unknown  2000-01-13         22  2000
+#>  9 landing unknown  2002-05-07         14  2002
+#> 10 landing unknown  2004-02-10         43  2004
+#> # ... with 429 more rows
 ```
 
 439건의 사고기록을 5개의 열로 구분해 저장되어 있음을 볼 수 있습니다. 그 중, `Phase`와 `Cause`가 명목형 변수로 저장되어 있으므로 `Cause`를 대상으로 `pivot_wider()`를 사용해보겠습니다. 
 
 
-```{r}
+
+```r
 AirCrash %>% 
   pivot_wider(names_from = Cause, # 각각의 열로 퍼트릴 대상이 되는 열
               values_from = Year, # names_from에 의해 생성될 열에 value로 들어갈 열
               values_fill = 0 # 새로 생길 열에 NA가 포함된 경우 대체할 값
               )
+#> # A tibble: 439 x 8
+#>    Phase date       Fatalities criminal unknown mechanical weather `human error`
+#>    <fct> <date>          <int>    <int>   <int>      <int>   <int>         <int>
+#>  1 land~ 1993-09-21         27     1993       0          0       0             0
+#>  2 land~ 1993-09-22        108     1993       0          0       0             0
+#>  3 land~ 1996-11-23        125     1996       0          0       0             0
+#>  4 land~ 2002-05-07        112     2002       0          0       0             0
+#>  5 land~ 1993-07-01         41        0    1993          0       0             0
+#>  6 land~ 1993-07-31         19        0    1993          0       0             0
+#>  7 land~ 1994-05-07          8        0    1994          0       0             0
+#>  8 land~ 2000-01-13         22        0    2000          0       0             0
+#>  9 land~ 2002-05-07         14        0    2002          0       0             0
+#> 10 land~ 2004-02-10         43        0    2004          0       0             0
+#> # ... with 429 more rows
 ```
 
 데이터셋, `AirCrah`에서 `Cause`는  criminal, unknown, mechanical, weather, human error, 총 5개의 명목형 값를 갖는 열입니다. `pivot_wider()`의 결과로 5개의 명목형 값이 각각의 열이 되어 데이터셋에 추가되었고 열 안에는 발생한 `Year`가 값으로 들어갑니다. 0으로 보이는 값은 `values_fill = 0`의 결과로 `NA를` 0으로 대체한 것입니다. 
@@ -366,13 +551,22 @@ AirCrash %>%
 
 똑같이 `AirCrash`를 사용할 것이며 편의를 위해 `date`와 `Year`를 제외하겠습니다. 
 
-```{r}
+
+```r
 # 사고 원인과 운항 단계를 이용한 평균 사망자 테이블 만들기
 AirCrash %>% 
   select(-c(date, Year)) %>%
   pivot_wider(names_from = Cause, 
               values_from = Fatalities, 
               values_fn = mean)
+#> # A tibble: 5 x 6
+#>   Phase    criminal unknown mechanical weather `human error`
+#>   <fct>       <dbl>   <dbl>      <dbl>   <dbl>         <dbl>
+#> 1 landing       93     28.9       34.9    31            43.3
+#> 2 en route     219.    42.4       55.9    34.2          64.9
+#> 3 take-off       2     18.1       27.2    21.7          65.7
+#> 4 standing       4     NA          2      NA            NA  
+#> 5 unknown       NA     27         NA       1           141
 ```
 
 
@@ -381,11 +575,20 @@ AirCrash %>%
 `values_fn`을 적용하지 않은 상태는 아래와 같으며 tibble 안에 list로 `Fatalities`의 value가 들어가있음을 볼 수 있습니다. 
 
 
-```{r}
+
+```r
 AirCrash %>% 
   select(-c(date, Year)) %>%
   pivot_wider(names_from = Cause, 
               values_from = Fatalities)
+#> # A tibble: 5 x 6
+#>   Phase    criminal   unknown    mechanical weather    `human error`
+#>   <fct>    <list>     <list>     <list>     <list>     <list>       
+#> 1 landing  <int [4]>  <int [18]> <int [19]> <int [55]> <int [114]>  
+#> 2 en route <int [16]> <int [25]> <int [29]> <int [24]> <int [63]>   
+#> 3 take-off <int [1]>  <int [8]>  <int [24]> <int [3]>  <int [29]>   
+#> 4 standing <int [2]>  <NULL>     <int [2]>  <NULL>     <NULL>       
+#> 5 unknown  <NULL>     <int [1]>  <NULL>     <int [1]>  <int [1]>
 ```
 
 두 가지의 방법으로 `pivot_wider()`의 사용 방법을 간단히 보았습니다. 이전에 본 `pivot_longer()`과 비슷한 부분도, 다른 부분도 있으니 `pivot_wider()`의 parameter를 자세히 알아보겠습니다. 
@@ -394,7 +597,8 @@ AirCrash %>%
 ## **`pivot_wider()`의 parameter**
 
 
-```{r}
+
+```r
 # pivot_wider(
 #   data, # 데이터셋 설정
 #   id_cols = NULL, # names_와 values_를 적용하지 않을 열을 설정
@@ -429,15 +633,25 @@ AirCrash %>%
 
 4. **names_glue** : 문자열(character), 넓게 퍼트려질 열의 이름을 수정하기 위한 parameter로 이름에 대한 패턴을 설정해 사용합니다. 예를 들어, 위의 *사고 원인과 운항 단계를 이용한 평균 사망자 테이블 만들기* 코드에 `Cause_`라는 말머리를 추가해보겠습니다. 
 
-    ```{r}
-# names_glue를 사용해 열 이름 편집하기
-AirCrash %>% 
-  select(-c(date, Year)) %>%
-  pivot_wider(names_from = Cause, 
+    
+    ```r
+    # names_glue를 사용해 열 이름 편집하기
+    AirCrash %>% 
+      select(-c(date, Year)) %>%
+      pivot_wider(names_from = Cause, 
               values_from = Fatalities, 
               values_fn = mean, 
               names_glue = "Cause_{Cause}") # {  } 
-```
+    #> # A tibble: 5 x 6
+    #>   Phase Cause_criminal Cause_unknown Cause_mechanical Cause_weather
+    #>   <fct>          <dbl>         <dbl>            <dbl>         <dbl>
+    #> 1 land~            93           28.9             34.9          31  
+    #> 2 en r~           219.          42.4             55.9          34.2
+    #> 3 take~             2           18.1             27.2          21.7
+    #> 4 stan~             4           NA                2            NA  
+    #> 5 unkn~            NA           27               NA             1  
+    #> # ... with 1 more variable: `Cause_human error` <dbl>
+    ```
 
     문자열의 형태로 사용 가능하며 `{...}`에 `names_from`에 사용했던 열 이름을 넣어주시면 해당 열에 속한 모든 명목형 값으로 만들어질 열 이름들에 `names_glue`에서 정의한 패턴이 적용돼 수정됩니다.
 
@@ -468,13 +682,31 @@ AirCrash %>%
 ## World Bank 데이터셋을 통한 시연
 `world_bank_pop`는 World Bank로부터 얻은 *각 나라의 00년부터 18년까지의 인구수*를 정리한 데이터셋입니다. 
 
-```{r}
+
+```r
 world_bank_pop
+#> # A tibble: 1,056 x 20
+#>    country indicator `2000` `2001` `2002` `2003`  `2004`  `2005`   `2006`
+#>    <chr>   <chr>      <dbl>  <dbl>  <dbl>  <dbl>   <dbl>   <dbl>    <dbl>
+#>  1 ABW     SP.URB.T~ 4.24e4 4.30e4 4.37e4 4.42e4 4.47e+4 4.49e+4  4.49e+4
+#>  2 ABW     SP.URB.G~ 1.18e0 1.41e0 1.43e0 1.31e0 9.51e-1 4.91e-1 -1.78e-2
+#>  3 ABW     SP.POP.T~ 9.09e4 9.29e4 9.50e4 9.70e4 9.87e+4 1.00e+5  1.01e+5
+#>  4 ABW     SP.POP.G~ 2.06e0 2.23e0 2.23e0 2.11e0 1.76e+0 1.30e+0  7.98e-1
+#>  5 AFG     SP.URB.T~ 4.44e6 4.65e6 4.89e6 5.16e6 5.43e+6 5.69e+6  5.93e+6
+#>  6 AFG     SP.URB.G~ 3.91e0 4.66e0 5.13e0 5.23e0 5.12e+0 4.77e+0  4.12e+0
+#>  7 AFG     SP.POP.T~ 2.01e7 2.10e7 2.20e7 2.31e7 2.41e+7 2.51e+7  2.59e+7
+#>  8 AFG     SP.POP.G~ 3.49e0 4.25e0 4.72e0 4.82e0 4.47e+0 3.87e+0  3.23e+0
+#>  9 AGO     SP.URB.T~ 8.23e6 8.71e6 9.22e6 9.77e6 1.03e+7 1.09e+7  1.15e+7
+#> 10 AGO     SP.URB.G~ 5.44e0 5.59e0 5.70e0 5.76e0 5.75e+0 5.69e+0  4.92e+0
+#> # ... with 1,046 more rows, and 11 more variables: `2007` <dbl>, `2008` <dbl>,
+#> #   `2009` <dbl>, `2010` <dbl>, `2011` <dbl>, `2012` <dbl>, `2013` <dbl>,
+#> #   `2014` <dbl>, `2015` <dbl>, `2016` <dbl>, ...
 ```
 
 
 `world_bank_pop`을 이용해 하고 싶은 작업은 1) 2000-2018의 열을 하나의 열로 쌓은 후 2) `indicator`를 의미에 맞게 쪼개어 열로 퍼트리는 것 입니다. 1)에는 `pivot_longer()`를, 2)에는 `pivot_wider()`를 사용하면 되겠군요. 아래의 코드는 [Pivoting](https://tidyr.tidyverse.org/articles/pivot.html#world-bank-1)의 코드입니다. 
-```{r}
+
+```r
 # Pivoting의 예제 코드 
 world_bank_pop %>% 
   pivot_longer(cols = `2000`:`2017`, 
@@ -482,13 +714,28 @@ world_bank_pop %>%
                values_to = "value") %>% 
   separate(indicator, c(NA, "area", "variable")) %>% 
   pivot_wider(names_from = variable, values_from = value)
+#> # A tibble: 9,504 x 5
+#>    country area  year   TOTL    GROW
+#>    <chr>   <chr> <chr> <dbl>   <dbl>
+#>  1 ABW     URB   2000  42444  1.18  
+#>  2 ABW     URB   2001  43048  1.41  
+#>  3 ABW     URB   2002  43670  1.43  
+#>  4 ABW     URB   2003  44246  1.31  
+#>  5 ABW     URB   2004  44669  0.951 
+#>  6 ABW     URB   2005  44889  0.491 
+#>  7 ABW     URB   2006  44881 -0.0178
+#>  8 ABW     URB   2007  44686 -0.435 
+#>  9 ABW     URB   2008  44375 -0.698 
+#> 10 ABW     URB   2009  44052 -0.731 
+#> # ... with 9,494 more rows
 ```
 
 
 데이터셋의 문자열값을 가진 열을 설정에 따라 여러 열로 쪼개주는 `separate`를 쓴 예제코드 대신 pivot을 여러번 사용한 아래의 코드로 같은 결과를 만들 수 있습니다. 효율적인 코드는 아니지만 이런 방법도 가능하다는 것을 보여드리고 싶었습니다. 
 
 
-```{r}
+
+```r
 # 똑같은 결과를 만들기 위한 나의 코드
 world_bank_pop %>% 
   pivot_longer(cols = `2000`:`2017`, 
@@ -502,6 +749,20 @@ world_bank_pop %>%
   pivot_wider(names_from = variable, values_from = value) %>% 
   select(country, area, year, TOTL, GROW) %>% 
   arrange(desc(area))
+#> # A tibble: 9,504 x 5
+#>    country area  year   TOTL    GROW
+#>    <chr>   <chr> <chr> <dbl>   <dbl>
+#>  1 ABW     URB   2000  42444  1.18  
+#>  2 ABW     URB   2001  43048  1.41  
+#>  3 ABW     URB   2002  43670  1.43  
+#>  4 ABW     URB   2003  44246  1.31  
+#>  5 ABW     URB   2004  44669  0.951 
+#>  6 ABW     URB   2005  44889  0.491 
+#>  7 ABW     URB   2006  44881 -0.0178
+#>  8 ABW     URB   2007  44686 -0.435 
+#>  9 ABW     URB   2008  44375 -0.698 
+#> 10 ABW     URB   2009  44052 -0.731 
+#> # ... with 9,494 more rows
 ```
 
 
@@ -510,7 +771,8 @@ world_bank_pop %>%
 
 [Pivoting](https://tidyr.tidyverse.org/articles/pivot.html#multi-choice-1)에 나온 또 다른 예제입니다. 이 예제는 [Maxime Wack이 제시한 이슈](https://github.com/tidyverse/tidyr/issues/384)에 의해 추가된 예제로 `pivot_longer()`과 `pivot_wider()`를 이용한 명목형 변수의 recording을 보여주고 있습니다. 천천히 따라가보겠습니다. 
 
-```{r}
+
+```r
 multi <- tribble(
   ~id, ~choice1, ~choice2, ~choice3,
   1, "A", "B", "C",
@@ -523,15 +785,28 @@ multi <- tribble(
 사용할 예제 데이터입니다. 이제 이 데이터를 이용해 1) `pivot_longer()`를 이용해 `NA`를 없앤 후, 2) `pivot_wider()`로 A부터 D까지의 선택 여부를 보여주는 데이터셋으로 만들어보겠습니다. 
 
 
-```{r}
+
+```r
 multi2 <- multi %>%
   pivot_longer(-id, values_drop_na = TRUE) %>%
   mutate(checked = TRUE)
 multi2
+#> # A tibble: 8 x 4
+#>      id name    value checked
+#>   <dbl> <chr>   <chr> <lgl>  
+#> 1     1 choice1 A     TRUE   
+#> 2     1 choice2 B     TRUE   
+#> 3     1 choice3 C     TRUE   
+#> 4     2 choice1 C     TRUE   
+#> 5     2 choice2 B     TRUE   
+#> 6     3 choice1 D     TRUE   
+#> 7     4 choice1 B     TRUE   
+#> 8     4 choice2 D     TRUE
 ```
 `pivot_longer()`를 사용해 choice1부터 3까지를 name열에 넣어 `NA`를 없앤 후 `mutate()`로 `checked`을 만든 모습입니다. 이제 여기에 `pivot_wider()`를 적용해 A부터 D까지 선택 여부에 따라 `checked`에 TRUE or FALSE가 들어가는 데이터셋으로 바꿔 보겠습니다. 
 
-```{r}
+
+```r
 multi2 %>% 
   pivot_wider(
     id_cols = id,
@@ -539,6 +814,13 @@ multi2 %>%
     values_from = checked,
     values_fill = FALSE
   )
+#> # A tibble: 4 x 5
+#>      id A     B     C     D    
+#>   <dbl> <lgl> <lgl> <lgl> <lgl>
+#> 1     1 TRUE  TRUE  TRUE  FALSE
+#> 2     2 FALSE TRUE  TRUE  FALSE
+#> 3     3 FALSE FALSE FALSE TRUE 
+#> 4     4 FALSE TRUE  FALSE TRUE
 ```
 
 이 예제에서 볼 수 있는 것처럼 pivoting으로 데이터셋을 변환할 수 있습니다. 
