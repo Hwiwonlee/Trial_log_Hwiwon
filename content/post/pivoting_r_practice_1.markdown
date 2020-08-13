@@ -1,5 +1,5 @@
 ---
-title: "Tidyverse와 pivoting test"
+title: "Tidyverse와 pivoting"
 author: "Hwiwon Lee"
 date: "2020-08-13"
 slug: tidyverse와-pivoting
