@@ -1,5 +1,5 @@
 ---
-title: "Tidyverse와 pivoting"
+title: "Tidyverse와 pivoting test"
 author: "Hwiwon Lee"
 date: "`r format(Sys.Date())`"
 slug: tidyverse와-pivoting
@@ -24,6 +24,7 @@ output:
       
 # https://stackoverflow.com/questions/535616/can-css-choose-a-different-default-font-and-size-depending-on-language
 # css setting 
+# test
 ---
 
 <style type="text/css">
