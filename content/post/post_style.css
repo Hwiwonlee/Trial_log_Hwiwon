@@ -2,12 +2,12 @@
 body {
   .lang-en {
     font-family:Verdana;
-    font-size:12px;
+    font-size:8px;
   }
 
   .lang-kr {
     font-family:NanumGothicLight;
-    font-size:12px;
+    font-size:8px;
   }
 }
 code {
@@ -20,12 +20,12 @@ code {
 pre {
   .lang-en {
     font-family:Verdana;
-    font-size:12px;
+    font-size:8px;
   }
 
   .lang-kr {
     font-family:NanumGothicLight;
-    font-size:12px;
+    font-size:8px;
   }
 }
 </style>
