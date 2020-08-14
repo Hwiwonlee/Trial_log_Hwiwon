@@ -61,7 +61,7 @@ subtitle = ""
   
 [advanced]
  # Custom CSS. 
- css_style = ""
+ css_style = "post/post_style.css"
  
  # CSS class.
  css_class = ""
