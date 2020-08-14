@@ -21,6 +21,7 @@ output:
       toc: yes
       toc_depth: 4
       toc_float: yes
+      # css test
       css: "post_style.css"
 # https://stackoverflow.com/questions/535616/can-css-choose-a-different-default-font-and-size-depending-on-language
 # css setting 
