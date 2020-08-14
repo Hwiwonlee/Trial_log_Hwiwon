@@ -261,9 +261,9 @@ who %>% pivot_longer(cols = new_sp_m014 : newrel_f65,
     ```
     - **a.(a)** 에서는 구분자 _를 이용한 `names_sep`의 기본적인 사용 방법을 볼 수 있습니다. 
 
-    - **a.(b)**는 special name, **.value**를 이용한 `name_sep`의 응용 활용입니다. **.value**는 `pivot_loger()`의 대상이 되는 열 이름 자체에 **value**가 있을 때 사용할 수 있는 방법입니다. 선언된 구분자와 **.value**의 위치에 따라 무엇을 value로 저장할 것인지 설정됩니다. 위의 경우, **.value_Country**의 형태로 선언되었으므로 Country에 해당하는 USA와 Eurupe을 Country열의 value로 저장하고 나머지 dob와 gender를 각각의 열로 저장된 것입니다. 
+    - **a.(b)** 는 special name, **.value**를 이용한 `name_sep`의 응용 활용입니다. **.value**는 `pivot_loger()`의 대상이 되는 열 이름 자체에 **value**가 있을 때 사용할 수 있는 방법입니다. 선언된 구분자와 **.value**의 위치에 따라 무엇을 value로 저장할 것인지 설정됩니다. 위의 경우, **.value_Country**의 형태로 선언되었으므로 Country에 해당하는 USA와 Eurupe을 Country열의 value로 저장하고 나머지 dob와 gender를 각각의 열로 저장된 것입니다. 
 
-    - **b.**는 `names_pattern`의 예제입니다. `names_pattern`은 `name_sep`보다 더 복잡하게 구성된 열 이름을 구분하기 위해 사용됩니다. `names_pattern`에 선언된 문자열은 [정규표현식](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html)으로 다른 프로그래밍 언어에서 사용하는 것과 크게 다르지 않습니만... 저는 자주 까먹으므로 따로 정리해보도록 하겠습니다. 다시 돌아와서, 결과 코드에서 보시는 것과 같이 `names_pattern`에 보이는 `(.*)`, `(.)`, `(.*)`에 해당하는 문자열을 차례로 `names_to`에 선언된 `diagnosis`, `gender`, `age`에 분할해서 저장해주는 매우 편리한 parameter입니다. 
+    - **b.** 는 `names_pattern`의 예제입니다. `names_pattern`은 `name_sep`보다 더 복잡하게 구성된 열 이름을 구분하기 위해 사용됩니다. `names_pattern`에 선언된 문자열은 [정규표현식](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html)으로 다른 프로그래밍 언어에서 사용하는 것과 크게 다르지 않습니만... 저는 자주 까먹으므로 따로 정리해보도록 하겠습니다. 다시 돌아와서, 결과 코드에서 보시는 것과 같이 `names_pattern`에 보이는 `(.*)`, `(.)`, `(.*)`에 해당하는 문자열을 차례로 `names_to`에 선언된 `diagnosis`, `gender`, `age`에 분할해서 저장해주는 매우 편리한 parameter입니다. 
     
     
 7. names_transform, values_transform : 리스트, `pivot_longe()r`의 결과로 생겨날 열의 타입을 바꾸기 위한 parameter입니다. 리스트 형태로 선언해주어야 하므로 **b.**의 예제에서 `names_transform = list(age = as.integer)`를 추가해주면 age열의 value들이 character에서 integer로 바뀌게 됩니다. 
