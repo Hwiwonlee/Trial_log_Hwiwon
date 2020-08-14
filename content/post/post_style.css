@@ -1,24 +1,29 @@
 body {
   .lang-en {
-    font-size:8px;
+    font-family:Verdana;
+    font-size:14px;
   }
 
   .lang-kr {
-    font-size:8px;
+    font-family:NanumGothicLight;
+    font-size:14px;
   }
 }
 code {
+  font-family:NanumGothicCoding;
+  
   h1,h2,h3,h4,h5,h6{
      font-size: 24pt;
   }
 }
 pre {
   .lang-en {
-    font-size:8px;
+    font-family:Verdana;
+    font-size:14px;
   }
 
   .lang-kr {
-    font-size:8px;
+    font-family:NanumGothicLight;
+    font-size:14px;
   }
 }
-

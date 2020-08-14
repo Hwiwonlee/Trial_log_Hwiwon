@@ -1358,7 +1358,7 @@ h6 {
 }
 </style>
 
-<style type="text/css">body {.lang-en {font-size:8px;}.lang-kr {font-size:8px;}}code {h1,h2,h3,h4,h5,h6{font-size: 24pt;}}pre {.lang-en {font-size:8px;}.lang-kr {font-size:8px;}}</style>
+<style type="text/css">body {.lang-en {font-family:Verdana;font-size:14px;}.lang-kr {font-family:NanumGothicLight;font-size:14px;}}code {font-family:NanumGothicCoding;h1,h2,h3,h4,h5,h6{font-size: 24pt;}}pre {.lang-en {font-family:Verdana;font-size:14px;}.lang-kr {font-family:NanumGothicLight;font-size:14px;}}</style>
 
 
 
@@ -1890,8 +1890,8 @@ names(who)[1:15]
 #&gt; # ... with 405,430 more rows</code></pre>
 <ul>
 <li><p><strong>a.(a)</strong> 에서는 구분자 _를 이용한 <code>names_sep</code>의 기본적인 사용 방법을 볼 수 있습니다.</p></li>
-<li><p><strong>a.(b)</strong>는 special name, <strong>.value</strong>를 이용한 <code>name_sep</code>의 응용 활용입니다. <strong>.value</strong>는 <code>pivot_loger()</code>의 대상이 되는 열 이름 자체에 <strong>value</strong>가 있을 때 사용할 수 있는 방법입니다. 선언된 구분자와 <strong>.value</strong>의 위치에 따라 무엇을 value로 저장할 것인지 설정됩니다. 위의 경우, <strong>.value_Country</strong>의 형태로 선언되었으므로 Country에 해당하는 USA와 Eurupe을 Country열의 value로 저장하고 나머지 dob와 gender를 각각의 열로 저장된 것입니다.</p></li>
-<li><p><strong>b.</strong>는 <code>names_pattern</code>의 예제입니다. <code>names_pattern</code>은 <code>name_sep</code>보다 더 복잡하게 구성된 열 이름을 구분하기 위해 사용됩니다. <code>names_pattern</code>에 선언된 문자열은 <a href="https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html">정규표현식</a>으로 다른 프로그래밍 언어에서 사용하는 것과 크게 다르지 않습니만… 저는 자주 까먹으므로 따로 정리해보도록 하겠습니다. 다시 돌아와서, 결과 코드에서 보시는 것과 같이 <code>names_pattern</code>에 보이는 <code>(.*)</code>, <code>(.)</code>, <code>(.*)</code>에 해당하는 문자열을 차례로 <code>names_to</code>에 선언된 <code>diagnosis</code>, <code>gender</code>, <code>age</code>에 분할해서 저장해주는 매우 편리한 parameter입니다.</p></li>
+<li><p><strong>a.(b)</strong> 는 special name, <strong>.value</strong>를 이용한 <code>name_sep</code>의 응용 활용입니다. <strong>.value</strong>는 <code>pivot_loger()</code>의 대상이 되는 열 이름 자체에 <strong>value</strong>가 있을 때 사용할 수 있는 방법입니다. 선언된 구분자와 <strong>.value</strong>의 위치에 따라 무엇을 value로 저장할 것인지 설정됩니다. 위의 경우, <strong>.value_Country</strong>의 형태로 선언되었으므로 Country에 해당하는 USA와 Eurupe을 Country열의 value로 저장하고 나머지 dob와 gender를 각각의 열로 저장된 것입니다.</p></li>
+<li><p><strong>b.</strong> 는 <code>names_pattern</code>의 예제입니다. <code>names_pattern</code>은 <code>name_sep</code>보다 더 복잡하게 구성된 열 이름을 구분하기 위해 사용됩니다. <code>names_pattern</code>에 선언된 문자열은 <a href="https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html">정규표현식</a>으로 다른 프로그래밍 언어에서 사용하는 것과 크게 다르지 않습니만… 저는 자주 까먹으므로 따로 정리해보도록 하겠습니다. 다시 돌아와서, 결과 코드에서 보시는 것과 같이 <code>names_pattern</code>에 보이는 <code>(.*)</code>, <code>(.)</code>, <code>(.*)</code>에 해당하는 문자열을 차례로 <code>names_to</code>에 선언된 <code>diagnosis</code>, <code>gender</code>, <code>age</code>에 분할해서 저장해주는 매우 편리한 parameter입니다.</p></li>
 </ul></li>
 <li><p>names_transform, values_transform : 리스트, <code>pivot_longe()r</code>의 결과로 생겨날 열의 타입을 바꾸기 위한 parameter입니다. 리스트 형태로 선언해주어야 하므로 <strong>b.</strong>의 예제에서 <code>names_transform = list(age = as.integer)</code>를 추가해주면 age열의 value들이 character에서 integer로 바뀌게 됩니다.</p></li>
 <li><p>names_repair : <code>c(&quot;minimal&quot;, &quot;unique&quot;, &quot;universal&quot;, &quot;check_unique&quot;)</code> 중 하나, 여러 열을 대상으로 <code>pivot_longer()</code>을 시행하는 경우에 발생할 수 있는 열 이름 중복을 막기 위한 parameter입니다. 위의 4가지 세팅이 존재하며 default 세팅은 <code>&quot;chek_unique&quot;</code>로 되어 있으며 이는 중복 열이 발생하는 경우에 에러를 리턴하는 옵션입니다. 자세한 내용은 <a href="https://vctrs.r-lib.org/reference/vec_as_names.html"><code>vctrs::vec_as_names()</code></a>를 참고하시길 바랍니다.</p></li>
