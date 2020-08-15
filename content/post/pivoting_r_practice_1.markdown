@@ -2,7 +2,7 @@
 title: "Tidyr과 pivoting"
 author: "Hwiwon Lee"
 date: "2020-08-15"
-summary: "Tidyr의 pivot_longer과 pivot_wider로 pivoting 해보기"
+description: "Tidyr의 pivot_longer과 pivot_wider로 pivoting 해보기"
 categories:
   - tidyverse
 tags:
