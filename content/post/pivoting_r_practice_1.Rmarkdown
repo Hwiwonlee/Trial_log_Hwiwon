@@ -2,7 +2,7 @@
 title: "Tidyr과 pivoting"
 author: "Hwiwon Lee"
 date: "`r format(Sys.Date())`"
-description: "Tidyr의 pivot_longer과 pivot_wider로 pivoting 해보기"
+summary: "Tidyr의 pivot_longer과 pivot_wider로 pivoting 해보기"
 categories:
   - tidyverse
 tags:
