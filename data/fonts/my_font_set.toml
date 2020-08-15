@@ -2,10 +2,10 @@
 name = "my_font_set"
 
 # Optional Google font URL
-google_fonts = "family=Nanum+Gothic+Coding"
+google_fonts = "family=Noto+Sans:ital@0;1"
 
 # Font families
-heading_font = "Nanum Gothic Coding"
-body_font = "Nanum Gothic Coding"
-nav_font = "Nanum Gothic Coding"
-mono_font = "Nanum Gothic Coding"
+heading_font = "Noto Sans"
+body_font = "Noto Sans"
+nav_font = "Noto Sans"
+mono_font = "Noto Sans"
