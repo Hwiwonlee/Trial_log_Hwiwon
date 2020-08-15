@@ -1,8 +1,8 @@
 ---
-title: "Tidyverse와 pivoting"
+title: "Tidyr과 pivoting"
 author: "Hwiwon Lee"
-date: "2020-08-14"
-slug: tidyverse와-pivoting
+date: "2020-08-15"
+subtitle: "Tidyr의 pivot_longer과 pivot_wider로 pivoting 해보기"
 categories:
   - tidyverse
 tags:
@@ -22,7 +22,7 @@ output:
       toc_depth: 4
       toc_float: yes
       # css test
-      css: "post_style.css"
+      # css: "post_style.css"
 # https://stackoverflow.com/questions/535616/can-css-choose-a-different-default-font-and-size-depending-on-language
 # css setting 
 # test
