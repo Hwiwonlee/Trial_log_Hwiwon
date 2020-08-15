@@ -24,8 +24,6 @@ output:
       # css test
       css: "post_style.css"
 # https://stackoverflow.com/questions/535616/can-css-choose-a-different-default-font-and-size-depending-on-language
-# css setting 
-# test
 ---
 
 
