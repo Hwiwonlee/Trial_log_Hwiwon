@@ -26,7 +26,7 @@ font = ""
 
 # Choose a font size.
 # Sizes: XS (extra small), S (small), M (medium), L (large - DEFAULT), XL (extra large)
-font_size = "XL"
+font_size = "XS"
 
 ############################
 ## Basic Info
@@ -150,7 +150,7 @@ address_format = "en-us"
 main_menu = {align = "l", show_logo = true}
 
 # Show estimated reading time for posts? (true/false)
-reading_time = true
+reading_time = false
 
 # Display next/previous section pager? (true/false)
 section_pager = false
@@ -175,8 +175,6 @@ abstract_length = 135
 # Load JS plugins
 #   E.g. To load `/assets/js/custom.js`, set `plugins_js = ["custom"]`.
 plugins_js  = []
-
-plugins_scss = ["post_style"]
 
 # Avatars.
 # An avatar is an image that appears next to a user's name.
