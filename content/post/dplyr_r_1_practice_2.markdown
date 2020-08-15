@@ -21,43 +21,10 @@ output:
       toc: yes
       toc_depth: 4
       toc_float: yes
+      css: "post_style.css"
 # https://stackoverflow.com/questions/535616/can-css-choose-a-different-default-font-and-size-depending-on-language
 # css setting 
 ---
-
-<style type="text/css">
-
-body {
-  .lang-en {
-    font-family:Verdana;
-    font-size:14px;
-  }
-
-  .lang-kr {
-    font-family:NanumGothicLight;
-    font-size:14px;
-  }
-}
-code {
-  font-family:NanumGothicCoding;
-  
-  h1,h2,h3,h4,h5,h6{
-     font-size: 24pt;
-  }
-}
-pre {
-  .lang-en {
-    font-family:Verdana;
-    font-size:14px;
-  }
-
-  .lang-kr {
-    font-family:NanumGothicLight;
-    font-size:14px;
-  }
-}
-</style>
-
 
 
 
