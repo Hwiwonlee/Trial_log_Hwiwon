@@ -29,12 +29,12 @@ output:
 body {
   .lang-en {
     font-family:Verdana;
-    font-size:14px;
+    font-size:12px;
   }
 
   .lang-kr {
     font-family:NanumGothicLight;
-    font-size:14px;
+    font-size:12px;
   }
 }
 code {
@@ -47,12 +47,12 @@ code {
 pre {
   .lang-en {
     font-family:Verdana;
-    font-size:14px;
+    font-size:12px;
   }
 
   .lang-kr {
     font-family:NanumGothicLight;
-    font-size:14px;
+    font-size:12px;
   }
 }
 </style>
