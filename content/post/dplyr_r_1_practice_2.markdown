@@ -1,7 +1,7 @@
 ---
 title: "dplyr 시리즈 (1) : dplyr패키지의 기초"
 author: "Hwiwon Lee"
-date: "Original Publish Date - 17 Aug, 2020 <br> Updated on - 17 Aug, 2020"
+date: "2020-08-17"
 summary: "tidy-select과 data-masking, 그리고 dplyr 패키지의 기초 함수 용법"
 categories:
   - tidyverse

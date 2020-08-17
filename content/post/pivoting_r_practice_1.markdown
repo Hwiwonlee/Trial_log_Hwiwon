@@ -1,7 +1,7 @@
 ---
 title: "Tidyr과 pivoting"
 author: "Hwiwon Lee"
-date: "2020-08-15"
+date: "2020-08-11"
 summary: "Tidyr의 pivot_longer과 pivot_wider로 pivoting 해보기"
 categories:
   - tidyverse
@@ -65,6 +65,9 @@ pivoting은 `pivot_longer()`, `pivot_wider()`이 아닌 `gather()`과 `spread()`
 library(caret)
 data(GermanCredit)
 tibble(GermanCredit) # 1000 x 62
+```
+
+```
 #> # A tibble: 1,000 x 62
 #>    Duration Amount InstallmentRate~ ResidenceDurati~   Age NumberExistingC~
 #>       <int>  <int>            <int>            <int> <int>            <int>
@@ -89,6 +92,9 @@ tibble(GermanCredit) # 1000 x 62
 
 ```r
 names(GermanCredit)[1:20]
+```
+
+```
 #>  [1] "Duration"                       "Amount"                        
 #>  [3] "InstallmentRatePercentage"      "ResidenceDuration"             
 #>  [5] "Age"                            "NumberExistingCredits"         
@@ -103,6 +109,9 @@ names(GermanCredit)[1:20]
 
 ```r
 names(GermanCredit)[grepl("Purpose.", names(GermanCredit))]
+```
+
+```
 #>  [1] "Purpose.NewCar"              "Purpose.UsedCar"            
 #>  [3] "Purpose.Furniture.Equipment" "Purpose.Radio.Television"   
 #>  [5] "Purpose.DomesticAppliance"   "Purpose.Repairs"            
@@ -124,6 +133,9 @@ GermanCredit %>%
                names_prefix = "Purpose.", # `하나의 열`에 들어갈 합쳐질 열의 이름들에서 빼고 싶은 부분을 정해주고
                values_to = "Purpose value") %>% # 길게 합쳐질 열들이 갖고 있던 값이 저장될 열의 이름까지 설정해주면 끝.
   select(index, Purpose, `Purpose value` , everything())
+```
+
+```
 #> # A tibble: 11,000 x 54
 #>    index Purpose `Purpose value` Duration Amount InstallmentRate~
 #>    <dbl> <chr>             <dbl>    <int>  <int>            <int>
@@ -194,6 +206,9 @@ GermanCredit %>%
   select(index, matches("purpose")) %>% 
   inner_join(check, ., by = "index") %>%  # inner_join을 통해 check와 pivot_longer이전의 데이터 결합
   as.data.frame()
+```
+
+```
 #>    index             Purpose Purpose value Purpose.NewCar Purpose.UsedCar
 #> 1      1    Radio.Television             1              0               0
 #> 2      2    Radio.Television             1              0               0
@@ -258,6 +273,9 @@ GermanCredit %>%
                values_to = "Purpose value") %>% 
   select(index, Purpose, `Purpose value` , everything()) %>% 
   filter(index == 1)
+```
+
+```
 #> # A tibble: 11 x 54
 #>    index Purpose `Purpose value` Duration Amount InstallmentRate~
 #>    <dbl> <chr>             <dbl>    <int>  <int>            <int>
@@ -343,6 +361,9 @@ GermanCredit %>%
                names_to = c("variable", "year"),
                names_sep = "_",
                values_drop_na = TRUE)
+    ```
+    
+    ```
     #> # A tibble: 20 x 4
     #>    index variable year  value
     #>    <int> <chr>    <chr> <chr>
@@ -376,6 +397,9 @@ GermanCredit %>%
                names_to = c(".value", "Country"), # special name, ".value"
                names_sep = "_",
                values_drop_na = TRUE)
+    ```
+    
+    ```
     #> # A tibble: 9 x 4
     #>   family Country dob        gender
     #>    <int> <chr>   <chr>       <int>
@@ -394,6 +418,9 @@ GermanCredit %>%
     ```r
     # b. names_pattern의 활용 
     names(who)[1:15]
+    ```
+    
+    ```
     #>  [1] "country"      "iso2"         "iso3"         "year"         "new_sp_m014" 
     #>  [6] "new_sp_m1524" "new_sp_m2534" "new_sp_m3544" "new_sp_m4554" "new_sp_m5564"
     #> [11] "new_sp_m65"   "new_sp_f014"  "new_sp_f1524" "new_sp_f2534" "new_sp_f3544"
@@ -408,6 +435,9 @@ GermanCredit %>%
                      # _(.) : _이후 단 한 글자를 gender로 정의
                      # (.)(.*) : (.) 이후 열 이름의 끝까지를 age로 정의
                      values_to = "count")
+    ```
+    
+    ```
     #> # A tibble: 405,440 x 8
     #>    country     iso2  iso3   year diagnosis gender age   count
     #>    <chr>       <chr> <chr> <int> <chr>     <chr>  <chr> <int>
@@ -463,6 +493,9 @@ GermanCredit %>%
 ```r
 library(vcdExtra)
 tibble(AirCrash) # 439 x 5 
+```
+
+```
 #> # A tibble: 439 x 5
 #>    Phase   Cause    date       Fatalities  Year
 #>    <fct>   <fct>    <date>          <int> <int>
@@ -489,6 +522,9 @@ AirCrash %>%
               values_from = Year, # names_from에 의해 생성될 열에 value로 들어갈 열
               values_fill = 0 # 새로 생길 열에 NA가 포함된 경우 대체할 값
               )
+```
+
+```
 #> # A tibble: 439 x 8
 #>    Phase date       Fatalities criminal unknown mechanical weather `human error`
 #>    <fct> <date>          <int>    <int>   <int>      <int>   <int>         <int>
@@ -524,6 +560,9 @@ AirCrash %>%
   pivot_wider(names_from = Cause, 
               values_from = Fatalities, 
               values_fn = mean)
+```
+
+```
 #> # A tibble: 5 x 6
 #>   Phase    criminal unknown mechanical weather `human error`
 #>   <fct>       <dbl>   <dbl>      <dbl>   <dbl>         <dbl>
@@ -546,6 +585,9 @@ AirCrash %>%
   select(-c(date, Year)) %>%
   pivot_wider(names_from = Cause, 
               values_from = Fatalities)
+```
+
+```
 #> # A tibble: 5 x 6
 #>   Phase    criminal   unknown    mechanical weather    `human error`
 #>   <fct>    <list>     <list>     <list>     <list>     <list>       
@@ -607,6 +649,9 @@ AirCrash %>%
               values_from = Fatalities, 
               values_fn = mean, 
               names_glue = "Cause_{Cause}") # {  } 
+    ```
+    
+    ```
     #> # A tibble: 5 x 6
     #>   Phase Cause_criminal Cause_unknown Cause_mechanical Cause_weather
     #>   <fct>          <dbl>         <dbl>            <dbl>         <dbl>
@@ -650,6 +695,9 @@ AirCrash %>%
 
 ```r
 world_bank_pop
+```
+
+```
 #> # A tibble: 1,056 x 20
 #>    country indicator `2000` `2001` `2002` `2003`  `2004`  `2005`   `2006`
 #>    <chr>   <chr>      <dbl>  <dbl>  <dbl>  <dbl>   <dbl>   <dbl>    <dbl>
@@ -679,6 +727,9 @@ world_bank_pop %>%
                values_to = "value") %>% 
   separate(indicator, c(NA, "area", "variable")) %>% 
   pivot_wider(names_from = variable, values_from = value)
+```
+
+```
 #> # A tibble: 9,504 x 5
 #>    country area  year   TOTL    GROW
 #>    <chr>   <chr> <chr> <dbl>   <dbl>
@@ -714,6 +765,9 @@ world_bank_pop %>%
   pivot_wider(names_from = variable, values_from = value) %>% 
   select(country, area, year, TOTL, GROW) %>% 
   arrange(desc(area))
+```
+
+```
 #> # A tibble: 9,504 x 5
 #>    country area  year   TOTL    GROW
 #>    <chr>   <chr> <chr> <dbl>   <dbl>
@@ -756,6 +810,9 @@ multi2 <- multi %>%
   pivot_longer(-id, values_drop_na = TRUE) %>%
   mutate(checked = TRUE)
 multi2
+```
+
+```
 #> # A tibble: 8 x 4
 #>      id name    value checked
 #>   <dbl> <chr>   <chr> <lgl>  
@@ -779,6 +836,9 @@ multi2 %>%
     values_from = checked,
     values_fill = FALSE
   )
+```
+
+```
 #> # A tibble: 4 x 5
 #>      id A     B     C     D    
 #>   <dbl> <lgl> <lgl> <lgl> <lgl>

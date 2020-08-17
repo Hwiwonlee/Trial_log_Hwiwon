@@ -1,7 +1,7 @@
 ---
 title: "Tidyr과 pivoting"
 author: "Hwiwon Lee"
-date: "`r format(Sys.Date())`"
+date: "2020-08-11"
 summary: "Tidyr의 pivot_longer과 pivot_wider로 pivoting 해보기"
 categories:
   - tidyverse
@@ -29,7 +29,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message=FALSE, warning=FALSE, fig.height = 8, fig.align = "center", cache=T, dpi = 300, dev = "png",
-                        collapse = TRUE, comment = "#>")
+                      comment = "#>")
 
 # https://tibble.tidyverse.org/reference/formatting.html
 options(tibble.print_max = 10)
