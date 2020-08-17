@@ -1,7 +1,9 @@
 ---
 title: "dplyr 시리즈 (1) : dplyr패키지의 기초"
 author: "Hwiwon Lee"
-date: "`r format(Sys.Date())`"
+params:
+  orig_date: "Original Publish Date: 12 April, 2018"
+  update_date: !r paste("Updated on:", format(Sys.time(), '%d %B, %Y'))
 summary: "tidy-select과 data-masking, 그리고 dplyr 패키지의 기초 함수 용법"
 categories:
   - tidyverse
@@ -23,7 +25,7 @@ output:
       toc_float: yes
       css: "post_style.css"
 # https://stackoverflow.com/questions/535616/can-css-choose-a-different-default-font-and-size-depending-on-language
-# css setting 
+
 ---
 
 
