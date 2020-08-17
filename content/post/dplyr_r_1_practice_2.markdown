@@ -3,7 +3,7 @@ title: "dplyr 시리즈 (1) : dplyr패키지의 기초"
 author: "Hwiwon Lee"
 params:
   orig_date: "Original Publish Date: 12 April, 2018"
-  update_date: !r paste("Updated on:", format(Sys.time(), '%d %B, %Y'))
+  update_date: "Updataed on: 13 April, 2018"
 summary: "tidy-select과 data-masking, 그리고 dplyr 패키지의 기초 함수 용법"
 categories:
   - tidyverse
