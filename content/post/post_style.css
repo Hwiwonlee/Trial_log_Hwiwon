@@ -11,7 +11,7 @@ body {
 }
 code {
   font-family:NanumGothicCoding;
-  
+
   h1,h2,h3,h4,h5,h6{
      font-size: 24pt;
   }
@@ -27,3 +27,11 @@ pre {
     font-size:14px;
   }
 }
+
+blockquote {
+    padding: 10px 20px;
+    margin: 0 0 20px;
+    font-size: 14px;
+    border-left: 5px solid #eee;
+}
+
