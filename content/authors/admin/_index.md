@@ -68,6 +68,6 @@ user_groups:
 - Visitors
 ---
 
-Nelson Bighetti is a professor of artificial intelligence at the Stanford AI Lab. His research interests include distributed robotics, mobile computing and programmable matter. He leads the Robotic Neurobiology group, which develops self-reconfiguring robots, systems of self-organizing robots, and mobile sensor networks.
+Welcome. My name is Hwiwon Lee. I'm interested in statistics and machine learning, enjoying data analysis that makes valuable discoveries in chaotic data. My main language is R and I am studying for analysis using Python.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed neque elit, tristique placerat feugiat ac, facilisis vitae arcu. Proin eget egestas augue. Praesent ut sem nec arcu pellentesque aliquet. Duis dapibus diam vel metus tempus vulputate.
+방문해주셔서 감사합니다. 제 이름은 이휘원입니다. 무질서한 데이터에서 가치 있는 발견을 해내는 데이터 분석을 즐기며 통계학과 머신러닝에 흥미가 있어 공부하고 있습니다. 주로 사용하는 언어는 R이며 Python을 활용한 분석을 위해 공부 중입니다. 
