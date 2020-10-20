@@ -22,7 +22,7 @@ bio: I enjoy data analysis and am interested in statistics, machine learning, an
 
 interests:
 - Statistics
-- Data analysis tool : R, Python and SQL
+- R, Python and SQL
 - Machine learning
 
 education:
